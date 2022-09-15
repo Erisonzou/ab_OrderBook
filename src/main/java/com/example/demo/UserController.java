@@ -22,9 +22,6 @@ public class UserController {
 	@Autowired
 	StockRepo Srepo;
 	
-	
-	public String CurrentUsername;
-	
 	Logger log = Logger.getAnonymousLogger();
 	
 	@RequestMapping("/")
@@ -43,7 +40,6 @@ public class UserController {
 		
 		String username = request.getParameter("user");
 		String password=request.getParameter("pwd");
-		CurrentUsername = username;
 		log.info("got the data from the front page");
 		
 		if(repo.findbyuser(username)!=null&&repo.findbypassword(password)!=null) {
