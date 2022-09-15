@@ -90,10 +90,9 @@ RestTemplate temp=new RestTemplate();
 		String password=request.getParameter("password");
 		String firstname=request.getParameter("fname");
 		String lastname=request.getParameter("lname");
-		double wallet = Double.parseDouble(request.getParameter("wallet"));
 		log.info("inside register ms and data set");
 		
-		String url="http://localhost:8084/register-user/"+firstname+"/"+lastname+"/"+user+"/"+password+"/"+wallet;
+		String url="http://localhost:8084/register-user/"+firstname+"/"+lastname+"/"+user+"/"+password;
 		temp.getForObject(url, String.class);
 		log.info("control went to register ms");
 		mv.setViewName("DoneRegistration.jsp");

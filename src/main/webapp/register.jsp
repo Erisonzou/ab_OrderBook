@@ -19,7 +19,7 @@ first name<input type="text" name="fname"><br>
 last name<input type="text" name="lname"><br>
 user name<input type="text" name="username"><br>
 password<input type="text" name="password"><br>
-Amount of Money<input type="text" name="wallet"><br>
+
 
 <input type="submit" value="register">
 
