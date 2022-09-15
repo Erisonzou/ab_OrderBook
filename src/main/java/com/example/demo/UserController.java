@@ -22,6 +22,7 @@ public class UserController {
 	@Autowired
 	StockRepo Srepo;
 	
+	@Autowired
 	public String CurrentUsername;
 	
 	Logger log = Logger.getAnonymousLogger();
