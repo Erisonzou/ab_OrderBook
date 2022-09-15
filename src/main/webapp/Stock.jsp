@@ -12,13 +12,12 @@
 <h2> List of Current Shoe Products in Store</h2>
 <%List<Stocks> s = (List<Stocks>)request.getAttribute("stocklist"); %>
 <table border = "1">
-<tr><th>Ticker</th><th>Open</th><th>Bid</th><th>Ask</th><th>Volume</th></tr>
+<tr><th>Ticker</th><th>Bid</th><th>Ask</th><th>Volume</th></tr>
 <%for(Stocks ss:s){ %>
 <tr><td><%=ss.getTicker() %></td>
-<td><%=ss.getOpen()%></td>
-<td><%=ss.getBid()  %></td>
-<td><%=ss.getAsk()  %></td>
-<td><%=ss.getVolume() %></td>
+<td><%=ss.getLatestbid()%></td>
+<td><%=ss.getLatestask()%></td>
+<td><%=ss.getVolume()%></td>
 </tr><%} %>
 </table>
 </body>
