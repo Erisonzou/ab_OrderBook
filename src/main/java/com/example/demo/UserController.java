@@ -21,9 +21,7 @@ public class UserController {
 	
 	@Autowired
 	StockRepo Srepo;
-	
-	@Autowired
-	public String CurrentUsername;
+
 	
 	Logger log = Logger.getAnonymousLogger();
 	
@@ -43,7 +41,6 @@ public class UserController {
 		
 		String username = request.getParameter("user");
 		String password=request.getParameter("pwd");
-		CurrentUsername = username;
 		log.info("got the data from the front page");
 		
 		if(repo.findbyuser(username)!=null&&repo.findbypassword(password)!=null) {
@@ -92,7 +89,7 @@ RestTemplate temp=new RestTemplate();
 		String lastname=request.getParameter("lname");
 		log.info("inside register ms and data set");
 		
-		String url="http://localhost:8084/register-user/"+firstname+"/"+lastname+"/"+user+"/"+password;
+		String url="http://localhost:8081/register-user/"+firstname+"/"+lastname+"/"+user+"/"+password;
 		temp.getForObject(url, String.class);
 		log.info("control went to register ms");
 		mv.setViewName("DoneRegistration.jsp");
