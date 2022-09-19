@@ -18,7 +18,6 @@ h1 {text-align: center;}
 </h1>
 <div>
 <form action="Stocks">
-Stock name <input type = "text" name = "stockname">
 <input type="submit">
 </form>
 </div>

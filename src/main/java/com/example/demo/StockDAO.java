@@ -49,6 +49,14 @@ public class StockDAO {
 		return stockList;	
 	}
 	
+	public Ask insert(Ask a)
+	{
+		return askRepo.save(a);
+	}
+	
+	public Bid insert(Bid b) {
+		return bidRepo.save(b);
+	}
 	
 }
 

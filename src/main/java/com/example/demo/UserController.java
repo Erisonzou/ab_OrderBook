@@ -22,9 +22,6 @@ public class UserController {
 	@Autowired
 	StockRepo Srepo;
 	
-	@Autowired 
-	StockDAO dao;
-	
 	Logger log = Logger.getAnonymousLogger();
 	
 	@RequestMapping("/")
@@ -98,25 +95,10 @@ RestTemplate temp=new RestTemplate();
 		return mv;
 	}
 	
-	/*@RequestMapping("/Stocks")
-	public ModelAndView Stocks(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mv =  new ModelAndView();
-		List<Stocks> stocklist = Srepo.findAll();
-		log.info("All the stocks from database is added to the stocklist");
-		if (stocklist!=null) {
-		log.info("stocklist is not empty");
-		mv.addObject("stocklist", stocklist);
-		log.info("stocklist added to the page");
-		mv.setViewName("Stock.jsp");
-		}
-		return mv;
-	}*/
-	
 	@RequestMapping("/Stocks")
 	public ModelAndView Stocks(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv =  new ModelAndView();
-		
-		List<Ask> stocklist = dao.returnAskbyStock(request.getParameter("stockname"));
+		List<Stocks> stocklist = Srepo.findAll();
 		log.info("All the stocks from database is added to the stocklist");
 		if (stocklist!=null) {
 		log.info("stocklist is not empty");
