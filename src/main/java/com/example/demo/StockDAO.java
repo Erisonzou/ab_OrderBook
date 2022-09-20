@@ -1,5 +1,6 @@
 package com.example.demo;
 
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -22,7 +23,6 @@ public class StockDAO {
 	@Autowired
 	BookOrderRepo OrderRepo;
 
-	
 	
 	
 	//grab all bid related to the stock
@@ -60,6 +60,7 @@ public class StockDAO {
 		
 		Collections.sort(bidList, new BidComparator());
 		
+		//
 		
 		for (Bid bb:bidList) {
 			
@@ -71,6 +72,7 @@ public class StockDAO {
 				
 				bb.setQuantity(bb.getQuantity() - a.getQuantity());
 				bidRepo.save(bb);
+				
 				
 				BookOrder newOrder = new BookOrder();
 				newOrder.setUser("bob");
@@ -150,6 +152,8 @@ public class StockDAO {
 				
 				
 				bb.setQuantity(bb.getQuantity() - a.getQuantity());
+				a.setQuantity(0);
+				
 				askRepo.save(bb);
 				
 				BookOrder newOrder = new BookOrder();
@@ -165,6 +169,7 @@ public class StockDAO {
 				break;
 			}else if (bb.getQuantity() == a.getQuantity()) 
 			{
+				a.setQuantity(0);
 				askRepo.delete(bb);
 				
 				BookOrder newOrder = new BookOrder();
@@ -239,8 +244,8 @@ class BidComparator implements Comparator<Bid> {
         if (b1.getPrice() == b2.getPrice())
             return 0;
         else if (b1.getPrice() > b2.getPrice())
-            return 1;
-        else
             return -1;
+        else
+            return 1;
     }
 }

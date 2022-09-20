@@ -22,7 +22,7 @@
 </table>
 
 <form action = "AskAndBid">
-Stock <input type = "text" name = "stockname">
+Stock <input type = "text" name = "stockname"><br>
 <input type = "submit" value = "Ask And Bid Table">
 </form>
 </body>

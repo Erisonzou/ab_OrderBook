@@ -86,6 +86,7 @@ public class StockController {
 			
 			currentbid = b;
 			
+			dao.executeOrder(b);
 			
 			mv.setViewName("Congrats.jsp");
 		}
