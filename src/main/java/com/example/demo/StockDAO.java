@@ -57,7 +57,7 @@ public class StockDAO {
 		return stockList;	
 	}
 	
-	public void executeOrder(Ask a) 
+	public void executeOrder(Ask a, String username) 
 	{
 		List<Bid> bidList = bidRepo.findbyprice(a.getPrice(),a.getStock());
 		
@@ -73,7 +73,7 @@ public class StockDAO {
 			{
 				
 				BookOrder newOrder = new BookOrder();
-				newOrder.setUser("bob");
+				newOrder.setUser(username);
 				newOrder.setOrderType("ask");
 				newOrder.setStock(a.getStock());
 				newOrder.setPrice(bb.getPrice());
@@ -91,7 +91,7 @@ public class StockDAO {
 			{
 				
 				BookOrder newOrder = new BookOrder();
-				newOrder.setUser("bob");
+				newOrder.setUser(username);
 				newOrder.setOrderType("ask");
 				newOrder.setStock(a.getStock());
 				newOrder.setPrice(bb.getPrice());
@@ -107,7 +107,7 @@ public class StockDAO {
 			else if (bb.getQuantity() < a.getQuantity()){
 				
 				BookOrder newOrder = new BookOrder();
-				newOrder.setUser("bob");
+				newOrder.setUser(username);
 				newOrder.setOrderType("ask");
 				newOrder.setStock(a.getStock());
 				newOrder.setPrice(bb.getPrice());
@@ -127,7 +127,7 @@ public class StockDAO {
 			LocalDateTime now = LocalDateTime.now();
 			
 			BookOrder newOrder = new BookOrder();
-			newOrder.setUser("bob");
+			newOrder.setUser(username);
 			newOrder.setOrderType("ask");
 			newOrder.setStock(a.getStock());
 			newOrder.setPrice(a.getPrice());
@@ -139,7 +139,7 @@ public class StockDAO {
 		
 	}
 	
-	public void executeOrder(Bid a) 
+	public void executeOrder(Bid a, String username) 
 	{
 		List<Ask> AskList = askRepo.findbyprice(a.getPrice(),a.getStock());
 		
@@ -153,7 +153,7 @@ public class StockDAO {
 			if (bb.getQuantity() > a.getQuantity())
 			{		
 				BookOrder newOrder = new BookOrder();
-				newOrder.setUser("bob");
+				newOrder.setUser(username);
 				newOrder.setOrderType("Bid");
 				newOrder.setStock(a.getStock());
 				newOrder.setPrice(bb.getPrice());
@@ -172,7 +172,7 @@ public class StockDAO {
 			{
 				
 				BookOrder newOrder = new BookOrder();
-				newOrder.setUser("bob");
+				newOrder.setUser(username);
 				newOrder.setOrderType("Bid");
 				newOrder.setStock(a.getStock());
 				newOrder.setPrice(bb.getPrice());
@@ -188,7 +188,7 @@ public class StockDAO {
 			else if (bb.getQuantity() < a.getQuantity()){
 				
 				BookOrder newOrder = new BookOrder();
-				newOrder.setUser("bob");
+				newOrder.setUser(username);
 				newOrder.setOrderType("Bid");
 				newOrder.setStock(a.getStock());
 				newOrder.setPrice(bb.getPrice());
@@ -209,7 +209,7 @@ public class StockDAO {
 			bidRepo.save(a);
 			
 			BookOrder newOrder = new BookOrder();
-			newOrder.setUser("bob");
+			newOrder.setUser(username);
 			newOrder.setOrderType("bid");
 			newOrder.setStock(a.getStock());
 			newOrder.setPrice(a.getPrice());

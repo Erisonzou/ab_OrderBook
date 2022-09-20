@@ -14,15 +14,21 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-public class UserController {
-
+public class MainController {
+	
 	@Autowired
 	UserRepo repo;
 	
 	@Autowired
-	StockRepo Srepo;
+	StockRepo Srepo;	
+
+	@Autowired 
+	StockDAO dao;
 	
-	public String CurrentUser;
+	Ask currentask;
+	Bid currentbid;
+	String currentStock;
+	String CurrentUser;
 	
 	Logger log = Logger.getAnonymousLogger();
 	
@@ -52,26 +58,28 @@ public class UserController {
 			if(repo.findbyuser(username).equals(repo.findbypassword(password))) 
 			{
 				log.info("login is success");
-	
 				mv.setViewName("display.jsp");
 				mv.addObject("userid",username);
 				
-				log.info("control passed to display.jsp");
+				List<Stocks> stocklist = Srepo.findAll();
+				log.info("All the stocks from database is added to the stocklist");
+				if (stocklist!=null) {
+					log.info("stocklist is not empty");
+					mv.addObject("stocklist", stocklist);
+					log.info("stocklist added to the page");
+					}
 				
+				log.info("control passed to display.jsp");	
 			}
 			else
-			{
-					
-				
+			{	
 			mv.setViewName("fail.jsp");
 			log.info("control pass to fail.jsp");
 				
 			}
 		}
 		else
-		{
-				
-			
+		{	
 		mv.setViewName("fail.jsp");
 		log.info("control pass to fail.jsp");
 			
@@ -114,4 +122,83 @@ RestTemplate temp=new RestTemplate();
 		return mv;
 	}
 	
+	@RequestMapping("/AskAndBid")
+	public ModelAndView askAndBidList(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv =  new ModelAndView();
+		
+		List<Ask> Asklist = dao.returnAskbyStock(request.getParameter("stockname"));
+		List<Bid> Bidlist = dao.returnBidbyStock(request.getParameter("stockname"));
+		currentStock = request.getParameter("stockname");
+		log.info("All the stocks from database is added to the stocklist");
+		if (Asklist!=null && Bidlist != null) {
+		log.info("stocklist is not empty");
+		
+		mv.addObject("bidlist", Bidlist);
+		mv.addObject("asklist", Asklist);
+		
+		log.info("stocklist added to the page");
+		mv.setViewName("AskAndBids.jsp");
+		}
+		return mv;
+	}
+	
+	@RequestMapping("/orderApplication")
+	public ModelAndView askandBidCreation(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv =  new ModelAndView();
+		mv.setViewName("AskAndBidCreation.jsp");
+		return mv;
+	}
+	
+	@RequestMapping("/AskorBidCreation")
+	public ModelAndView AskAndBidInsert(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv =  new ModelAndView();
+		String orderType = request.getParameter("orderType");
+		log.info("Grabbed the OrderType");
+		
+		if (orderType.equals("Ask")) {
+			log.info("orderType is Ask");
+			Ask a = new Ask();
+			
+			a.setStock(currentStock);
+			a.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+			a.setPrice(Double.parseDouble(request.getParameter("price")));
+			log.info("set the info into the ask object");
+			
+			currentask = a;
+			
+			dao.executeOrder(a,CurrentUser);
+			
+			mv.setViewName("Congrats.jsp");
+			
+		}else if (orderType.equals("Bid")) {
+			log.info("orderType is bid");
+			
+			Bid b = new Bid();
+			
+			b.setStock(currentStock);
+			b.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+			b.setPrice(Double.parseDouble(request.getParameter("price")));
+			log.info("set the info into the bid object");
+			
+			currentbid = b;
+			
+			dao.executeOrder(b,CurrentUser);
+			
+			mv.setViewName("Congrats.jsp");
+		}
+		
+		return mv;
+	}
+	
+
+	@RequestMapping("/Transactions")
+	public ModelAndView Transactions(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv =  new ModelAndView();
+		List<BookOrder> BookOrderList = dao.returnTransactions();
+		mv.addObject("BookOrderlist",BookOrderList);
+		mv.setViewName("Transactions.jsp");
+		return mv;
+	}
+	
 }
+
