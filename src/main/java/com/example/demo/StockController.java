@@ -94,4 +94,14 @@ public class StockController {
 		return mv;
 	}
 	
+
+	@RequestMapping("/Transactions")
+	public ModelAndView Transactions(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv =  new ModelAndView();
+		List<BookOrder> BookOrderList = dao.returnTransactions();
+		mv.addObject("BookOrderlist",BookOrderList);
+		mv.setViewName("Transactions.jsp");
+		return mv;
+	}
+	
 }

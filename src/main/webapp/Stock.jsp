@@ -9,7 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h2> List of Current Shoe Products in Store</h2>
+<h2> List of Stocks</h2>
 <%List<Stocks> s = (List<Stocks>)request.getAttribute("stocklist"); %>
 <table border = "1">
 <tr><th>Ticker</th><th>Bid</th><th>Ask</th></tr>

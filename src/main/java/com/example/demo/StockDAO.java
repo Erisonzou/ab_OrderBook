@@ -23,7 +23,10 @@ public class StockDAO {
 	@Autowired
 	BookOrderRepo OrderRepo;
 
-	
+	public List<BookOrder> returnTransactions()
+	{
+		return OrderRepo.findAll();
+	}
 	
 	//grab all bid related to the stock
 	public List<Bid> returnBidbyStock(String Stockname)
@@ -69,11 +72,6 @@ public class StockDAO {
 			if (bb.getQuantity() > a.getQuantity())
 			{
 				
-				
-				bb.setQuantity(bb.getQuantity() - a.getQuantity());
-				bidRepo.save(bb);
-				
-				
 				BookOrder newOrder = new BookOrder();
 				newOrder.setUser("bob");
 				newOrder.setOrderType("ask");
@@ -83,11 +81,14 @@ public class StockDAO {
 				newOrder.setTime(now);
 				newOrder.setOrderStatus("Filled");
 				OrderRepo.save(newOrder);
+				
+				bb.setQuantity(bb.getQuantity() - a.getQuantity());
+				bidRepo.save(bb);
+				a.setQuantity(0);
 				
 				break;
 			}else if (bb.getQuantity() == a.getQuantity()) 
 			{
-				bidRepo.delete(bb);
 				
 				BookOrder newOrder = new BookOrder();
 				newOrder.setUser("bob");
@@ -99,11 +100,11 @@ public class StockDAO {
 				newOrder.setOrderStatus("Filled");
 				OrderRepo.save(newOrder);
 				
+				bidRepo.delete(bb);
+				a.setQuantity(0);
 				break;
 			}
 			else if (bb.getQuantity() < a.getQuantity()){
-				a.setQuantity(a.getQuantity() - bb.getQuantity());
-				bidRepo.delete(bb);
 				
 				BookOrder newOrder = new BookOrder();
 				newOrder.setUser("bob");
@@ -115,6 +116,8 @@ public class StockDAO {
 				newOrder.setOrderStatus("Partially Filled");
 				OrderRepo.save(newOrder);
 				
+				a.setQuantity(a.getQuantity() - bb.getQuantity());
+				bidRepo.delete(bb);
 			}
 		}
 		
@@ -148,29 +151,25 @@ public class StockDAO {
 			LocalDateTime now = LocalDateTime.now();
 			
 			if (bb.getQuantity() > a.getQuantity())
-			{
-				
+			{		
+				BookOrder newOrder = new BookOrder();
+				newOrder.setUser("bob");
+				newOrder.setOrderType("Bid");
+				newOrder.setStock(a.getStock());
+				newOrder.setPrice(bb.getPrice());
+				newOrder.setQuantity(a.getQuantity());
+				newOrder.setTime(now);
+				newOrder.setOrderStatus("Filled");
+				OrderRepo.save(newOrder);
 				
 				bb.setQuantity(bb.getQuantity() - a.getQuantity());
 				a.setQuantity(0);
 				
 				askRepo.save(bb);
 				
-				BookOrder newOrder = new BookOrder();
-				newOrder.setUser("bob");
-				newOrder.setOrderType("Bid");
-				newOrder.setStock(a.getStock());
-				newOrder.setPrice(bb.getPrice());
-				newOrder.setQuantity(a.getQuantity());
-				newOrder.setTime(now);
-				newOrder.setOrderStatus("Filled");
-				OrderRepo.save(newOrder);
-				
 				break;
 			}else if (bb.getQuantity() == a.getQuantity()) 
 			{
-				a.setQuantity(0);
-				askRepo.delete(bb);
 				
 				BookOrder newOrder = new BookOrder();
 				newOrder.setUser("bob");
@@ -182,11 +181,11 @@ public class StockDAO {
 				newOrder.setOrderStatus("Filled");
 				OrderRepo.save(newOrder);
 				
+				a.setQuantity(0);
+				askRepo.delete(bb);
 				break;
 			}
 			else if (bb.getQuantity() < a.getQuantity()){
-				a.setQuantity(a.getQuantity() - bb.getQuantity());
-				askRepo.delete(bb);
 				
 				BookOrder newOrder = new BookOrder();
 				newOrder.setUser("bob");
@@ -197,6 +196,9 @@ public class StockDAO {
 				newOrder.setTime(now);
 				newOrder.setOrderStatus("Partially Filled");
 				OrderRepo.save(newOrder);
+				
+				a.setQuantity(a.getQuantity() - bb.getQuantity());
+				askRepo.delete(bb);
 				
 			}
 		}

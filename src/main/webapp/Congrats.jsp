@@ -8,5 +8,8 @@
 </head>
 <body>
 <h1> WOOOO CONGRATS</h1>
+<form action = "Transactions">
+<input type="submit" value="all transactions">
+</form>
 </body>
 </html>
