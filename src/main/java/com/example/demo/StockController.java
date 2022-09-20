@@ -14,7 +14,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class StockController {
 	
+	Ask currentask;
+	Bid currentbid;
+	List<Bid> currentBidStock;
+	List<Ask> currentAskStock;
 	String currentStock;
+	
 	
 	@Autowired 
 	StockDAO dao;
@@ -25,12 +30,16 @@ public class StockController {
 	public ModelAndView askAndBidList(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv =  new ModelAndView();
 		
-		List<Ask> stocklist = dao.returnAskbyStock(request.getParameter("stockname"));
+		List<Ask> Asklist = dao.returnAskbyStock(request.getParameter("stockname"));
+		List<Bid> Bidlist = dao.returnBidbyStock(request.getParameter("stockname"));
 		currentStock = request.getParameter("stockname");
 		log.info("All the stocks from database is added to the stocklist");
-		if (stocklist!=null) {
+		if (Asklist!=null && Bidlist != null) {
 		log.info("stocklist is not empty");
-		mv.addObject("stocklist", stocklist);
+		
+		mv.addObject("bidlist", Bidlist);
+		mv.addObject("asklist", Asklist);
+		
 		log.info("stocklist added to the page");
 		mv.setViewName("AskAndBids.jsp");
 		}
@@ -59,33 +68,26 @@ public class StockController {
 			a.setPrice(Double.parseDouble(request.getParameter("price")));
 			log.info("set the info into the ask object");
 			
-			Ask aa = dao.insert(a);
-			log.info("save the info into the database");
+			currentask = a;
 			
-			if (aa!=null) {
-				log.info("aa is not null");
-				mv.setViewName("Congrats.jsp");
-				log.info("set to congrats.jsp");
-			}
+			dao.executeOrder(a);
+			
+			mv.setViewName("Congrats.jsp");
 			
 		}else if (orderType.equals("Bid")) {
 			log.info("orderType is bid");
+			
 			Bid b = new Bid();
 			
 			b.setStock(currentStock);
 			b.setQuantity(Integer.parseInt(request.getParameter("quantity")));
 			b.setPrice(Double.parseDouble(request.getParameter("price")));
-			
 			log.info("set the info into the bid object");
 			
-			Bid bb = dao.insert(b);
-			log.info("save the info into database");
+			currentbid = b;
 			
-			if (bb!=null) {
-				log.info("bb is not null");
-				mv.setViewName("Congrats.jsp");
-				log.info("sent to congrats.jsp");
-			}
+			
+			mv.setViewName("Congrats.jsp");
 		}
 		
 		return mv;

@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -17,6 +18,10 @@ public class StockDAO {
 	
 	@Autowired
 	BidRepo bidRepo;
+	
+	@Autowired
+	BookOrderRepo OrderRepo;
+
 	
 	
 	
@@ -49,15 +54,166 @@ public class StockDAO {
 		return stockList;	
 	}
 	
-	public Ask insert(Ask a)
+	public void executeOrder(Ask a) 
 	{
-		return askRepo.save(a);
+		List<Bid> bidList = bidRepo.findbyprice(a.getPrice(),a.getStock());
+		
+		Collections.sort(bidList, new BidComparator());
+		
+		
+		for (Bid bb:bidList) {
+			
+			LocalDateTime now = LocalDateTime.now();
+			
+			if (bb.getQuantity() > a.getQuantity())
+			{
+				
+				
+				bb.setQuantity(bb.getQuantity() - a.getQuantity());
+				bidRepo.save(bb);
+				
+				BookOrder newOrder = new BookOrder();
+				newOrder.setUser("bob");
+				newOrder.setOrderType("ask");
+				newOrder.setStock(a.getStock());
+				newOrder.setPrice(bb.getPrice());
+				newOrder.setQuantity(a.getQuantity());
+				newOrder.setTime(now);
+				newOrder.setOrderStatus("Filled");
+				OrderRepo.save(newOrder);
+				
+				break;
+			}else if (bb.getQuantity() == a.getQuantity()) 
+			{
+				bidRepo.delete(bb);
+				
+				BookOrder newOrder = new BookOrder();
+				newOrder.setUser("bob");
+				newOrder.setOrderType("ask");
+				newOrder.setStock(a.getStock());
+				newOrder.setPrice(bb.getPrice());
+				newOrder.setQuantity(a.getQuantity());
+				newOrder.setTime(now);
+				newOrder.setOrderStatus("Filled");
+				OrderRepo.save(newOrder);
+				
+				break;
+			}
+			else if (bb.getQuantity() < a.getQuantity()){
+				a.setQuantity(a.getQuantity() - bb.getQuantity());
+				bidRepo.delete(bb);
+				
+				BookOrder newOrder = new BookOrder();
+				newOrder.setUser("bob");
+				newOrder.setOrderType("ask");
+				newOrder.setStock(a.getStock());
+				newOrder.setPrice(bb.getPrice());
+				newOrder.setQuantity(bb.getQuantity());
+				newOrder.setTime(now);
+				newOrder.setOrderStatus("Partially Filled");
+				OrderRepo.save(newOrder);
+				
+			}
+		}
+		
+		if (a.getQuantity() > 0)
+		{
+			askRepo.save(a);
+			LocalDateTime now = LocalDateTime.now();
+			
+			BookOrder newOrder = new BookOrder();
+			newOrder.setUser("bob");
+			newOrder.setOrderType("ask");
+			newOrder.setStock(a.getStock());
+			newOrder.setPrice(a.getPrice());
+			newOrder.setQuantity(a.getQuantity());
+			newOrder.setTime(now);
+			newOrder.setOrderStatus("not Filled");
+			OrderRepo.save(newOrder);
+		}
+		
 	}
 	
-	public Bid insert(Bid b) {
-		return bidRepo.save(b);
+	public void executeOrder(Bid a) 
+	{
+		List<Ask> AskList = askRepo.findbyprice(a.getPrice(),a.getStock());
+		
+		Collections.sort(AskList, new AskComparator());
+		
+		
+		for (Ask bb:AskList) {
+			
+			LocalDateTime now = LocalDateTime.now();
+			
+			if (bb.getQuantity() > a.getQuantity())
+			{
+				
+				
+				bb.setQuantity(bb.getQuantity() - a.getQuantity());
+				askRepo.save(bb);
+				
+				BookOrder newOrder = new BookOrder();
+				newOrder.setUser("bob");
+				newOrder.setOrderType("Bid");
+				newOrder.setStock(a.getStock());
+				newOrder.setPrice(bb.getPrice());
+				newOrder.setQuantity(a.getQuantity());
+				newOrder.setTime(now);
+				newOrder.setOrderStatus("Filled");
+				OrderRepo.save(newOrder);
+				
+				break;
+			}else if (bb.getQuantity() == a.getQuantity()) 
+			{
+				askRepo.delete(bb);
+				
+				BookOrder newOrder = new BookOrder();
+				newOrder.setUser("bob");
+				newOrder.setOrderType("Bid");
+				newOrder.setStock(a.getStock());
+				newOrder.setPrice(bb.getPrice());
+				newOrder.setQuantity(a.getQuantity());
+				newOrder.setTime(now);
+				newOrder.setOrderStatus("Filled");
+				OrderRepo.save(newOrder);
+				
+				break;
+			}
+			else if (bb.getQuantity() < a.getQuantity()){
+				a.setQuantity(a.getQuantity() - bb.getQuantity());
+				askRepo.delete(bb);
+				
+				BookOrder newOrder = new BookOrder();
+				newOrder.setUser("bob");
+				newOrder.setOrderType("Bid");
+				newOrder.setStock(a.getStock());
+				newOrder.setPrice(bb.getPrice());
+				newOrder.setQuantity(bb.getQuantity());
+				newOrder.setTime(now);
+				newOrder.setOrderStatus("Partially Filled");
+				OrderRepo.save(newOrder);
+				
+			}
+		}
+		
+		if (a.getQuantity() > 0)
+		{
+			LocalDateTime now = LocalDateTime.now();
+			bidRepo.save(a);
+			
+			BookOrder newOrder = new BookOrder();
+			newOrder.setUser("bob");
+			newOrder.setOrderType("bid");
+			newOrder.setStock(a.getStock());
+			newOrder.setPrice(a.getPrice());
+			newOrder.setQuantity(a.getQuantity());
+			newOrder.setTime(now);
+			newOrder.setOrderStatus("not Filled");
+			OrderRepo.save(newOrder);
+			
+		}
+		
 	}
-	
 }
 
 

@@ -2,6 +2,6 @@ package com.example.demo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderRepo extends JpaRepository<Order,String>{
+public interface BookOrderRepo extends JpaRepository<BookOrder,String>{
 
 }

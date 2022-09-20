@@ -9,15 +9,26 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%List<Ask> s = (List<Ask>)request.getAttribute("stocklist"); %>
+<%List<Ask> s = (List<Ask>)request.getAttribute("asklist"); %>
 <table border = "1">
-<tr><th>Ticker</th><th>Bid</th><th>price</th></tr>
+<tr><th>Ticker</th><th>Ask</th><th>price</th></tr>
 <%for(Ask ss:s){ %>
 <tr><td><%=ss.getStock() %></td>
 <td><%=ss.getQuantity()%></td>
 <td><%=ss.getPrice()%></td>
 </tr><%} %>
 </table>
+
+<%List<Bid> ss = (List<Bid>)request.getAttribute("bidlist"); %>
+<table border = "1">
+<tr><th>Ticker</th><th>Bid</th><th>price</th></tr>
+<%for(Bid sss:ss){ %>
+<tr><td><%=sss.getStock() %></td>
+<td><%=sss.getQuantity()%></td>
+<td><%=sss.getPrice()%></td>
+</tr><%} %>
+</table>
+
 <form action ="orderApplication">
 <input type="submit" value = "create a bid/ask">
 </form>
